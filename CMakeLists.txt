@@ -57,17 +57,6 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     )
 endif()
 
-#file(GLOB RESOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.png)
-#if(CMAKE_CROSSCOMPILING)
-#    add_library(resourcedata STATIC src/resources.cpp resource_web/resourcedata.c)
-#else()
-#    add_custom_command(
-#        OUTPUT resourcedata.c
-#        COMMAND ${resourcer_bin} ${CMAKE_CURRENT_SOURCE_DIR}/resources/ ${CMAKE_CURRENT_BINARY_DIR}/resourcedata.c
-#        DEPENDS ${resourcer_bin} ${RESOURCE_FILES}
-#    )
-#    add_library(resourcedata STATIC src/resources.cpp ${CMAKE_CURRENT_BINARY_DIR}/resourcedata.c)
-#endif()
 
 set(GAME_SOURCES
     src/main.cpp

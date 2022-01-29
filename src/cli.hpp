@@ -94,6 +94,5 @@ private:
         return false;
     }
     std::vector<std::string> argList;
-    std::map<std::vector<std::string>, Info> handler;
-    //std::vector<std::string>* positionalTarget{nullptr};
+    std::map<std::vector<std::string>, Info> handler;;
 };
