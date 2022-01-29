@@ -1,0 +1,8 @@
+/*build*/
+.vs/
+.vscode/
+.idea/
+*.swp
+*~
+CMakeLists.txt.user
+.DS_Store
