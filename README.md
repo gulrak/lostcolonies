@@ -15,6 +15,15 @@ in 8 days (2022-01-21T19:00Z to 2922-01-29T19:00Z) on using C++ on top of Raylib
 > _Humanity fought hard, but failed, so they decided to evacuate those colonies
 > and you are chosen to protect their retreat..._
 
+## Controls
+
+Currently the game only supports keyboard control:
+
+* `SPACE` - fire your weapon
+* `LEFT` or `A` - move to the left
+* `RIGHT` or `D` - move to the right
+* `M` - mute or unmute audio
+* `P` - pause the game
 
 ## Technical Details
 
@@ -58,7 +67,12 @@ helpful project, not only as a game.
 
 ## Screenshots
 
+### Title Screen
 ![Lost Colonies Title Screen](media/lost-colonies-01.png)
+
+### Colony to be Evacuaded
 ![Lost Colonies Title Screen](media/lost-colonies-02.png)
+
+### Fighting the aliens 
 ![Lost Colonies Title Screen](media/lost-colonies-03.png)
 
