@@ -168,7 +168,7 @@ public:
         for (auto& projectile : _projectiles) {
             projectile._pos = Vector2Add(projectile._pos, projectile._velocity);
             if (projectile._pos.x > width() || projectile._pos.x < -7 || projectile._pos.y < -3 || projectile._pos.y > height()) {
-                if(projectile._type == Sprite::AlienBomb && projectile._pos.y >= height()) {
+                if(projectile._type == Sprite::AlienBomb && projectile._pos.y >= height() && std::abs(_colonyShip._velocity.y) < 0.001f) {
                     auto oldNum = _colonists;
                     _colonists = std::max(0, _colonists - GetRandomValue(20,50));
                     SoundManager::instance()->playSound(SoundId::Explosion);
