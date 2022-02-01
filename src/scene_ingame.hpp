@@ -89,7 +89,7 @@ public:
         updateBackground(dt_s, timeFlow);
         _weaponCharge += dt_s;
         _aliens.erase(std::remove_if(_aliens.begin(), _aliens.end(), [](const Sprite& s) { return s._type == Sprite::Unused; }), _aliens.end());
-        if(_aliens.empty() && _state == State::Playing) {
+        if(_aliens.empty() && _state == State::Playing && !_numAlienBombs) {
             _score += _colonists * 50;
             _colonistsSaved += _colonists;
             if(_colonists > 0 && _colonyShip._velocity.y >= 0.0f) {
@@ -165,6 +165,7 @@ public:
                 ++countAliens;
             }
         }
+        _numAlienBombs = 0;
         for (auto& projectile : _projectiles) {
             projectile._pos = Vector2Add(projectile._pos, projectile._velocity);
             if (projectile._pos.x > width() || projectile._pos.x < -7 || projectile._pos.y < -3 || projectile._pos.y > height()) {
@@ -273,6 +274,9 @@ public:
                     message("Oh noooo...", _colonyShip._pos.x - 20, _colonyShip._pos.y, 2000);
                     _colonists = 0;
                 }
+            }
+            if(projectile._type == Sprite::AlienBomb) {
+                ++_numAlienBombs;
             }
         }
         for (auto& particle : _particles) {
@@ -547,4 +551,5 @@ protected:
     int _colonists{0};
     int _colonistsSaved{0};
     int _nextAlienBombTime{0};
+    int _numAlienBombs{0};
 };
