@@ -34,7 +34,7 @@ public:
     template<typename T>
     void option(const std::vector<std::string>& names, T& destVal, std::string description = std::string())
     {
-        static_assert(Contains<T*, ValuePtr>::value, "CLI: option type must be bool, std::int64_t, std::string or std::vector<std::string>");
+        static_assert(Contains<T*, ValuePtr>::value, "CLI: supported option types are only bool, std::int64_t, std::string or std::vector<std::string>");
         handler[names] = {&destVal,
                           [](const std::string& arg, ValuePtr valp) {
                               std::visit(visitor{[arg](bool* val) { *val = !*val; },
@@ -94,5 +94,5 @@ private:
         return false;
     }
     std::vector<std::string> argList;
-    std::map<std::vector<std::string>, Info> handler;;
+    std::map<std::vector<std::string>, Info> handler;
 };

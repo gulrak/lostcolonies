@@ -309,7 +309,6 @@ public:
             _particles.back().gradient = &_playerEngineTrailColors;
         }
         if(_state == State::GameOver && (_stateTime > GameOverStateTime || (_stateTime > 2 && IsKeyPressed(KEY_SPACE))) && _finishScreen != SceneId::SetupScene) {
-            SetClipboardText(TextFormat("\xf0\x9f\x8c\x98 LOST COLONIES \xf0\x9f\x91\xbe\nScore: %d, Level: %d", _score, _level));
             _lastScoreInfo = { _score, "YOU", _level, _colonistsSaved, _currentPlanet };
             _highscores.emplace(_score, _lastScoreInfo);
             _finishScreen = SceneId::SetupScene;

@@ -3,6 +3,22 @@
 #include <lostcolonies/version.hpp>
 #include "scene_base.hpp"
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+
+extern "C" {
+
+EM_JS(void, jsWriteClipboard, (const char* c_str), {
+
+    var str = UTF8ToString(c_str);
+    navigator.clipboard.writeText(str)
+        .then(() => { console.log('Copied score info to clipboard.') })
+        .catch((error) => { console.log('Copy failed! ${error}') });
+})
+
+}
+#endif
+
 class SetupScene : public SceneBase
 {
 public:
@@ -49,6 +65,13 @@ public:
                 break;
             }
         }
+        if(_lastScoreInfo.score && IsKeyPressed(KEY_S)) {
+#ifdef __EMSCRIPTEN__
+            jsWriteClipboard(TextFormat("\xf0\x9f\x8c\x98 LOST COLONIES \xf0\x9f\x91\xbe\nScore: %d, Level: %d, Colonists: %d", _lastScoreInfo.score, _lastScoreInfo.level, _lastScoreInfo.colonists));
+#else
+            SetClipboardText(TextFormat("\xf0\x9f\x8c\x98 LOST COLONIES \xf0\x9f\x91\xbe\nScore: %d, Level: %d, Colonists: %d", _lastScoreInfo.score, _lastScoreInfo.level, _lastScoreInfo.colonists));
+#endif
+        }
         if (IsMouseButtonPressed(0) || (_clicked && IsKeyPressed(KEY_SPACE))) {
             _clicked = true;
             _played = true;
@@ -93,17 +116,20 @@ public:
                 break;
             }
             case State::Highscore: {
-                static int colorIndices[4] = { 13, 14, 15, 14 };
+                static int colorIndices[4] = {13, 14, 15, 14};
                 drawTextCentered("HIGHSCORES", 40, 20, WHITE);
                 size_t count = 0;
-                for(const auto& [score, info] : _highscores) {
+                for (const auto& [score, info] : _highscores) {
                     ++count;
-                    if(info.score == _lastScoreInfo.score && info.level == _lastScoreInfo.level && info.planet == _lastScoreInfo.planet) {
-                        drawTextCentered(TextFormat("> %02d.  %07d  %3s  L:%02d  C:%5d <", count, (int)score, info.name.c_str(), info.level, info.colonists), count * 20 + 50, 10, BasePalette[colorIndices[((int)(_stateTime*10) + count) % 4]]);
+                    if (info.score == _lastScoreInfo.score && info.level == _lastScoreInfo.level && info.planet == _lastScoreInfo.planet) {
+                        drawTextCentered(TextFormat("> %02d.  %07d  %3s  L:%02d  C:%5d <", count, (int)score, info.name.c_str(), info.level, info.colonists), count * 20 + 50, 10, BasePalette[colorIndices[((int)(_stateTime * 10) + count) % 4]]);
                     }
                     else {
                         drawTextCentered(TextFormat("%02d.  %07d  %3s  L:%02d  C:%5d", count, (int)score, info.name.c_str(), info.level, info.colonists), count * 20 + 50, 10, BasePalette[colorIndices[((int)(_stateTime * 10) + count) % 4]]);
                     }
+                }
+                if (_lastScoreInfo.score) {
+                    drawTextCentered("[press 'S' to share last result via clipboard]", 280, 10, WHITE);
                 }
                 break;
             }
