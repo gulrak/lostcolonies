@@ -67,9 +67,9 @@ public:
         }
         if(_lastScoreInfo.score && IsKeyPressed(KEY_S)) {
 #ifdef __EMSCRIPTEN__
-            jsWriteClipboard(TextFormat("\xf0\x9f\x8c\x98 LOST COLONIES \xf0\x9f\x91\xbe\nScore: %d, Level: %d, Colonists: %d", _lastScoreInfo.score, _lastScoreInfo.level, _lastScoreInfo.colonists));
+            jsWriteClipboard(TextFormat("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT " \xf0\x9f\x91\xbe\nScore: %d, Level: %d, Colonists: %d", _lastScoreInfo.score, _lastScoreInfo.level, _lastScoreInfo.colonists));
 #else
-            SetClipboardText(TextFormat("\xf0\x9f\x8c\x98 LOST COLONIES \xf0\x9f\x91\xbe\nScore: %d, Level: %d, Colonists: %d", _lastScoreInfo.score, _lastScoreInfo.level, _lastScoreInfo.colonists));
+            SetClipboardText(TextFormat("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT "\xf0\x9f\x91\xbe\nScore: %d, Level: %d, Colonists: %d", _lastScoreInfo.score, _lastScoreInfo.level, _lastScoreInfo.colonists));
 #endif
         }
         if (IsMouseButtonPressed(0) || (_clicked && IsKeyPressed(KEY_SPACE))) {

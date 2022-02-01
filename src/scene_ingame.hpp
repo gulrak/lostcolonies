@@ -43,6 +43,7 @@ public:
         _playerLives = 3;
         _colonistsSaved = 0;
         _alpha = 1.0f;
+        _levelSequenceRandom.seed(3456);
         setupLevel();
     }
 
@@ -68,7 +69,7 @@ public:
         _currentPlanet = getRandomPlanetName();
         generateTerrain(_currentPlanet);
         _colonists = _random.randomInt(40,250);
-        _nextAlienBombTime = GetRandomValue(10, 30);
+        _nextAlienBombTime = _random.randomInt(10, 30);
         _pixelOverGround = 1000;
         setState(State::Init);
     }
@@ -132,7 +133,7 @@ public:
                     }
                     if(bombAlien >= 0 && bombAlien >= countAliens && alien._type != Sprite::Unused && alien._pos.y < height() - 100) {
                         _projectiles.push_back(SpriteManager::instance()->getSprite(sidAlienBomb, {alien._pos.x + 2, alien._pos.y + alien._sprite.height}, {0.0f, 0.8f}));
-                        _nextAlienBombTime = _stateTime + GetRandomValue(10,30);
+                        _nextAlienBombTime = _stateTime + _random.randomInt(10,30);
                         bombAlien = -1;
                     }
                     else if (GetRandomValue(0, 1500) < 1) {
@@ -305,7 +306,7 @@ public:
                 _projectiles.push_back(SpriteManager::instance()->getSprite(sidPlayerLaser, {_playerSprite._pos.x + 4, _playerSprite._pos.y - 6}, {0.0f, -1.5f}, {0, 200, 255, 255}));
                 SoundManager::instance()->playSound(SoundId::Laser);
             }
-            _particles.emplace_back(Particle2::eFADE, Vector2{_playerSprite._pos.x + GetRandomValue(6, 9), _playerSprite._pos.y + 16}, Vector2{0, 60.0f}, BLACK, 300);
+            _particles.emplace_back(Particle2::eFADE, Vector2{_playerSprite._pos.x + GetRandomValue(6, 9), _playerSprite._pos.y + 15}, Vector2{0, 60.0f}, BLACK, 300);
             _particles.back().gradient = &_playerEngineTrailColors;
         }
         if(_state == State::GameOver && (_stateTime > GameOverStateTime || (_stateTime > 2 && IsKeyPressed(KEY_SPACE))) && _finishScreen != SceneId::SetupScene) {
@@ -454,14 +455,16 @@ public:
         return _finishScreen;
     }
 
-    std::string getRandomPlanetName() const
+    std::string getRandomPlanetName()
     {
         static std::vector<std::string> starNames = {"Aldebaran", "Algol", "Altair", "Betelgeuse", "Bunda",   "Capella", "Castor", "Deneb", "Fafnir",  "Furud",  "Gomeisa", "Haedus",  "Intercrus", "Kochab",   "Larawag", "Maia", "Megrez", "Menkar",
                                                      "Mira",      "Nihal", "Nunki",  "Pherkad",    "Pleione", "Procyon", "Rigel",  "Sabik", "Seginus", "Sirius", "Subra",   "Tegmine", "Timir",     "Torcular", "Ukdah",   "Vega", "Zaurak"};
         static std::vector<std::string> numbers = {"II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"};
         std::string result;
         do {
-            result = starNames[GetRandomValue(0, starNames.size() - 1)] + " " + numbers[GetRandomValue(0, numbers.size() - 1)];
+            auto star = _levelSequenceRandom.randomInt(0, starNames.size() - 1);
+            auto planet = _levelSequenceRandom.randomInt(0, numbers.size() - 1);
+            result = starNames[star] + " " + numbers[planet];
         } while(_savedPlanets.count(result));
         return result;
     }
@@ -526,6 +529,7 @@ protected:
     State _state{State::Init};
     SceneId _finishScreen = SceneId::IngameScene;
     Random _random{1234};
+    Random _levelSequenceRandom{3456};
     Sprite _playerSprite;
     Sprite _colonyShip;
     using Alien = Sprite;
