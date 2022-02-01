@@ -165,6 +165,7 @@ public:
                 ++countAliens;
             }
         }
+        _numPlayerShots = 0;
         _numAlienBombs = 0;
         for (auto& projectile : _projectiles) {
             projectile._pos = Vector2Add(projectile._pos, projectile._velocity);
@@ -278,6 +279,9 @@ public:
             if(projectile._type == Sprite::AlienBomb) {
                 ++_numAlienBombs;
             }
+            else if(projectile._type == Sprite::PlayerShot) {
+                ++_numPlayerShots;
+            }
         }
         for (auto& particle : _particles) {
             particle.update(dt_s);
@@ -296,7 +300,7 @@ public:
             else if (_playerSprite._pos.x < width() - 18 && _pixelOverGround < 900 && (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))) {
                 _playerSprite._pos.x += 2;
             }
-            if (_state == State::Playing && IsKeyPressed(KEY_SPACE) && _weaponCharge > 0.5f && _projectiles.size() < 100) {
+            if (_state == State::Playing && IsKeyPressed(KEY_SPACE) && (_weaponCharge > 0.5f || _numPlayerShots < 2)) {
                 _weaponCharge = 0;
                 _projectiles.push_back(SpriteManager::instance()->getSprite(sidPlayerLaser, {_playerSprite._pos.x + 4, _playerSprite._pos.y - 6}, {0.0f, -1.5f}, {0, 200, 255, 255}));
                 SoundManager::instance()->playSound(SoundId::Laser);
@@ -552,4 +556,5 @@ protected:
     int _colonistsSaved{0};
     int _nextAlienBombTime{0};
     int _numAlienBombs{0};
+    int _numPlayerShots{0};
 };
