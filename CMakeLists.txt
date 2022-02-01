@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(lostcolonies VERSION 0.9 LANGUAGES C CXX)
+project(lostcolonies VERSION 1.1 LANGUAGES C CXX)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     set(GHC_FLAT_OUTPUT ON CACHE BOOL "Build with collecting output directories bin&lib")

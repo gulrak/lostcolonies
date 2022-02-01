@@ -31,6 +31,18 @@ First of all, the code is a mess, this is a gamejam project written in 8 days
 using only One weekend and the evenings of six normal work days. The closer
 the deadline, the dirtier the hacks. But that was to be expected.
 
+_Lost Colonies_  was developed on macOS and tested as native application and
+compiled via emscripten on a few browsers. I see no reason it would not work
+on as native game on Windows and Linux too, but I didn't test during the gamejam
+crunch time.
+
+### Used Resources
+
+* [raylib](https://www.raylib.com) - the fun game programming library that inspired me to write this.
+* [rFXGen](https://raylibtech.itch.io/rfxgen) - A sound effects generation tool, modified a bit for this event
+* [raygui](https://github.com/raysan5/raygui) - A raylib companion library for ui widgets, used in generator tooling
+* [dm_property_list.h](https://github.com/raysan5/raygui/tree/master/examples/property_list) - A helper header from the `raygui` examples, modified for some visual changes and issues compiling in under C++
+
 ### Generated Sounds
 
 From the start on I decided to try and generate my assets procedurally, I
