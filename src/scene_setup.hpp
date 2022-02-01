@@ -67,9 +67,9 @@ public:
         }
         if(_lastScoreInfo.score && IsKeyPressed(KEY_S)) {
 #ifdef __EMSCRIPTEN__
-            jsWriteClipboard(TextFormat("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT " \xf0\x9f\x91\xbe\nScore: %d, Level: %d, Colonists: %d", _lastScoreInfo.score, _lastScoreInfo.level, _lastScoreInfo.colonists));
+            jsWriteClipboard((std::string("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT " \xf0\x9f\x91\xbe\nScore: ") + std::to_string(_lastScoreInfo.score) + ", Level: " + std::to_string(_lastScoreInfo.level) + ", Colonists: " + std::to_string(_lastScoreInfo.colonists)).c_str());
 #else
-            SetClipboardText(TextFormat("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT "\xf0\x9f\x91\xbe\nScore: %d, Level: %d, Colonists: %d", _lastScoreInfo.score, _lastScoreInfo.level, _lastScoreInfo.colonists));
+            SetClipboardText((std::string("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT " \xf0\x9f\x91\xbe\nScore: ") + std::to_string(_lastScoreInfo.score) + ", Level: " + std::to_string(_lastScoreInfo.level) + ", Colonists: " + std::to_string(_lastScoreInfo.colonists)).c_str());
 #endif
         }
         if (IsMouseButtonPressed(0) || (_clicked && IsKeyPressed(KEY_SPACE))) {
@@ -85,8 +85,9 @@ public:
         switch (_state) {
             case State::Title: {
                 showTitle(100.0f);
-                drawTextCentered(R"(A game for the "raylib 5K gamejam")", 150, 10, WHITE);
-                drawTextCentered(R"(by Steffen "Gulrak" Schuemann)", 165, 10, WHITE);
+                drawTextCentered(R"(A game originally for the "raylib 5K gamejam")", 150, 10, WHITE);
+                drawTextCentered("Post-jam version v" LOSTCOLONIES_VERSION_STRING_SHORT, 165, 10, RAYWHITE);
+                drawTextCentered(R"(by Steffen "Gulrak" Schuemann)", 180, 10, WHITE);
                 if (!_clicked) {
                     drawTextCentered(R"(<<CLICK TO START>>)", 220, 10, WHITE);
                 }
@@ -122,7 +123,7 @@ public:
                 for (const auto& [score, info] : _highscores) {
                     ++count;
                     if (info.score == _lastScoreInfo.score && info.level == _lastScoreInfo.level && info.planet == _lastScoreInfo.planet) {
-                        drawTextCentered(TextFormat("> %02d.  %07d  %3s  L:%02d  C:%5d <", count, (int)score, info.name.c_str(), info.level, info.colonists), count * 20 + 50, 10, BasePalette[colorIndices[((int)(_stateTime * 10) + count) % 4]]);
+                        drawTextCentered(TextFormat("> %02ld.  %07d  %3s  L:%02d  C:%5d <", count, (int)score, info.name.c_str(), info.level, info.colonists), count * 20 + 50, 10, BasePalette[colorIndices[((int)(_stateTime * 10) + count) % 4]]);
                     }
                     else {
                         drawTextCentered(TextFormat("%02d.  %07d  %3s  L:%02d  C:%5d", count, (int)score, info.name.c_str(), info.level, info.colonists), count * 20 + 50, 10, BasePalette[colorIndices[((int)(_stateTime * 10) + count) % 4]]);

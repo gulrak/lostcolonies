@@ -198,7 +198,10 @@ public:
                 if(_mute) {
                     DrawText("[MUTE]", 8, _currentScene->height() - 10, 10, WHITE);
                 }
-                DrawText(TextFormat("%3d", GetFPS()), _currentScene->width() - 20, _currentScene->height() - 10, 10, GREEN);
+                auto fps = GetFPS();
+                if(fps < 55 || fps > 64) {
+                    DrawText(TextFormat("%3d", GetFPS()), _currentScene->width() - 20, _currentScene->height() - 10, 10, GREEN);
+                }
                 EndTextureMode();
                 BeginDrawing();
                 DrawTexturePro(_renderTexture.texture, {0, GetScreenHeight() - _currentScene->height(), _currentScene->width(), -_currentScene->height()}, {0, 0, GetScreenWidth(), GetScreenHeight()}, {0.0f, 0.0f}, 0.0f, WHITE);
@@ -206,6 +209,7 @@ public:
                     DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, _transAlpha));
                 }
                 EndDrawing();
+
 #ifdef WITH_FFMPEG
                 if (_encoder.IsOpen() /*&& _currentScene->renderMode() == RenderMode::Upscale2 && !(++_frameCount % 10)*/) {
                     Image frame = LoadImageFromTexture(_renderTexture.texture);
