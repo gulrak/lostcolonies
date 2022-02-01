@@ -130,7 +130,7 @@ public:
                     if (alien._pos.y >= height()) {
                         setState(State::GameOver);
                     }
-                    if(bombAlien >= 0 && bombAlien >= countAliens && alien._type != Sprite::Unused && alien._pos.y < height() - 75) {
+                    if(bombAlien >= 0 && bombAlien >= countAliens && alien._type != Sprite::Unused && alien._pos.y < height() - 100) {
                         _projectiles.push_back(SpriteManager::instance()->getSprite(sidAlienBomb, {alien._pos.x + 2, alien._pos.y + alien._sprite.height}, {0.0f, 0.8f}));
                         _nextAlienBombTime = _stateTime + GetRandomValue(10,30);
                         bombAlien = -1;
