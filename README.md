@@ -1,7 +1,7 @@
 # Lost Colonies
 
 An entry game for the [raylib 5k gamejam](https://itch.io/jam/raylib-5k-gamejam) written
-in 8 days (2022-01-21T19:00Z to 2922-01-29T19:00Z) on using C++ on top of Raylib.
+in 8 days (2022-01-21T19:00Z to 2022-01-29T19:00Z) on using C++ on top of Raylib.
 
 ## The Story
 
