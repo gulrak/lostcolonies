@@ -7,10 +7,13 @@
 #include <algorithm>
 #include <cmath>
 
-Gradient::Gradient()
+Gradient::Gradient() noexcept try
 {
     addMark(0.0f, {0, 0, 0, 255});
     addMark(1.0f, {255, 255, 255, 255});
+}
+catch(...) {
+    // just leave it empty if something goes wrong
 }
 
 Gradient::~Gradient() = default;

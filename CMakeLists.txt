@@ -75,10 +75,6 @@ set(GAME_SOURCES
     src/math.hpp
     src/particles.hpp
     src/hash.hpp
-    src/noise.hpp
-    src/noise.cpp
-    src/noise1234.c
-    src/noise1234.h
     src/cli.hpp
     src/procedural.hpp
     src/procedural.cpp

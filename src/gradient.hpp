@@ -12,7 +12,7 @@ struct GradientMark
 class Gradient
 {
 public:
-    Gradient();
+    Gradient() noexcept;
     ~Gradient();
 
     const Color& getColorAt(float position) const;
@@ -24,6 +24,6 @@ public:
 private:
     void computeColorAt(float position, Color& color) const;
     std::list<GradientMark> _marks;
-    Color _cachedValues[256];
+    Color _cachedValues[256]{};
 };
 

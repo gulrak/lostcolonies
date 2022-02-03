@@ -4,6 +4,7 @@
 
 #include "sprite.hpp"
 #include "particles.hpp"
+#include "hash.hpp"
 
 #include <cmath>
 #include <variant>
@@ -13,8 +14,6 @@
 
 inline static const int screenWidth{900};
 inline static const int screenHeight{600};
-//inline static const int renderWidth{450};
-//inline static const int renderHeight{300};
 
 enum SoundId { None, Laser, Explosion };
 
@@ -22,7 +21,7 @@ enum class SceneId { StartupScene, SetupScene, IngameScene, GameOverScene, Gener
 
 enum class RenderMode { Default, Unscaled, Upscale2 };
 
-using Value = std::variant<std::nullptr_t,bool,int64_t,float,std::string,Color,Vector2,Vector3>;
+using Value = std::variant<std::nullptr_t,bool,int,size_t,int64_t,float,std::string,Color,Vector2,Vector3>;
 
 class Scene
 {
@@ -81,11 +80,29 @@ public:
         _properties.insert_or_assign(id, value);
     }
 
+    template<typename T>
+    static void setProperty(uint64_t id, const T& value)
+    {
+        _properties.insert_or_assign(id, Value{value});
+    }
+
     static const Value& getProperty(uint64_t id)
     {
         static Value dummy{nullptr};
         auto iter = _properties.find(id);
         return iter != _properties.end() ? iter->second : dummy;
+    }
+
+    template<typename T>
+    static T getProperty(uint64_t id, const T& defaultValue)
+    {
+        auto iter = _properties.find(id);
+#ifndef NDEBUG
+        if(iter == _properties.end()) {
+            TraceLog(LOG_ERROR, "Property '%ld' not found!", id);
+        }
+#endif
+        return iter != _properties.end() && std::holds_alternative<T>(iter->second) ? std::get<T>(iter->second) : defaultValue;
     }
 
     static Color getColor(int idx)

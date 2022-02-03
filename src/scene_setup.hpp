@@ -9,13 +9,9 @@
 extern "C" {
 
 EM_JS(void, jsWriteClipboard, (const char* c_str), {
-
     var str = UTF8ToString(c_str);
-    navigator.clipboard.writeText(str)
-        .then(() => { console.log('Copied score info to clipboard.') })
-        .catch((error) => { console.log('Copy failed! ${error}') });
+    navigator.clipboard.writeText(str).then(() = > {console.log('Copied score info to clipboard.')}).catch((error) = > {console.log('Copy failed! ${error}')});
 })
-
 }
 #endif
 
@@ -30,7 +26,7 @@ public:
     {
         loadBase();
         setState(_played ? State::Highscore : State::Title);
-        while(_highscores.size() > 10) {
+        while (_highscores.size() > 10) {
             _highscores.erase(std::prev(_highscores.end()));
         }
     }
@@ -65,11 +61,17 @@ public:
                 break;
             }
         }
-        if(_lastScoreInfo.score && IsKeyPressed(KEY_S)) {
+        if (getProperty("last_score"_h, 0) && IsKeyPressed(KEY_S)) {
 #ifdef __EMSCRIPTEN__
-            jsWriteClipboard((std::string("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT " \xf0\x9f\x91\xbe\nScore: ") + std::to_string(_lastScoreInfo.score) + ", Level: " + std::to_string(_lastScoreInfo.level) + ", Colonists: " + std::to_string(_lastScoreInfo.colonists)).c_str());
+            jsWriteClipboard((std::string("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT " \xf0\x9f\x91\xbe\nScore: ") + std::to_string(getProperty("last_score"_h, 0)) +
+                              ", Level: " + std::to_string(getProperty("last_level"_h, 0)) +
+                              ", Colonists: " + std::to_string(getProperty("last_colonists"_h, 0)))
+                                 .c_str());
 #else
-            SetClipboardText((std::string("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT " \xf0\x9f\x91\xbe\nScore: ") + std::to_string(_lastScoreInfo.score) + ", Level: " + std::to_string(_lastScoreInfo.level) + ", Colonists: " + std::to_string(_lastScoreInfo.colonists)).c_str());
+            SetClipboardText((std::string("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT " \xf0\x9f\x91\xbe\nScore: ") + std::to_string(getProperty("last_score"_h, 0)) +
+                              ", Level: " + std::to_string(getProperty("last_level"_h, 0)) +
+                              ", Colonists: " + std::to_string(getProperty("last_colonists"_h, 0)))
+                                 .c_str());
 #endif
         }
         if (IsMouseButtonPressed(0) || (_clicked && IsKeyPressed(KEY_SPACE))) {
@@ -81,6 +83,7 @@ public:
 
     void render() override
     {
+        using namespace std::string_literals;
         renderBackground();
         switch (_state) {
             case State::Title: {
@@ -120,16 +123,19 @@ public:
                 static int colorIndices[4] = {13, 14, 15, 14};
                 drawTextCentered("HIGHSCORES", 40, 20, WHITE);
                 size_t count = 0;
+                auto lastScore =  getProperty("last_score"_h, 0lu);
+                auto lastLevel = getProperty("last_level"_h, 0);
+                auto lastPlanet = getProperty("last_planet"_h, ""s);
                 for (const auto& [score, info] : _highscores) {
                     ++count;
-                    if (info.score == _lastScoreInfo.score && info.level == _lastScoreInfo.level && info.planet == _lastScoreInfo.planet) {
+                    if (info.score == lastScore && info.level == lastLevel && info.planet == lastPlanet) {
                         drawTextCentered(TextFormat("> %02ld.  %07d  %3s  L:%02d  C:%5d <", count, (int)score, info.name.c_str(), info.level, info.colonists), count * 20 + 50, 10, BasePalette[colorIndices[((int)(_stateTime * 10) + count) % 4]]);
                     }
                     else {
                         drawTextCentered(TextFormat("%02d.  %07d  %3s  L:%02d  C:%5d", count, (int)score, info.name.c_str(), info.level, info.colonists), count * 20 + 50, 10, BasePalette[colorIndices[((int)(_stateTime * 10) + count) % 4]]);
                     }
                 }
-                if (_lastScoreInfo.score) {
+                if (getProperty("last_score"_h, 0)) {
                     drawTextCentered("[press 'S' to share last result via clipboard]", 280, 10, WHITE);
                 }
                 break;

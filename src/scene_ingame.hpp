@@ -310,8 +310,12 @@ public:
             _particles.back().gradient = &_playerEngineTrailColors;
         }
         if(_state == State::GameOver && (_stateTime > GameOverStateTime || (_stateTime > 2 && IsKeyPressed(KEY_SPACE))) && _finishScreen != SceneId::SetupScene) {
-            _lastScoreInfo = { _score, "YOU", _level, _colonistsSaved, _currentPlanet };
-            _highscores.emplace(_score, _lastScoreInfo);
+            ScoreInfo scoreInfo = { _score, "YOU", _level, _colonistsSaved, _currentPlanet };
+            setProperty("last_score"_h, _score);
+            setProperty("last_level"_h, _level);
+            setProperty("last_colonists"_h, _colonistsSaved);
+            setProperty("last_planet"_h, _currentPlanet);
+            _highscores.emplace(_score, scoreInfo);
             _finishScreen = SceneId::SetupScene;
         }
         if(_state == State::Killed && _stateTime > KilledStateTime) {
@@ -394,9 +398,7 @@ public:
 #ifndef NDEBUG
         drawTextCentered(TextFormat("State:%d Time:%ds CS-Y: %0.3f", (int)_state, (int)_stateTime, _colonyShip._pos.y), height() - 10, 10, BLUE);
 #endif
-        //auto scoreStr = std::to_string(_score);
-        //auto scoreWidth = MeasureText(scoreStr.c_str(), 10);
-        //DrawText(scoreStr.c_str(), 32 - scoreWidth / 2, 12, 10, WHITE);
+
         if(_state == State::GameOver) {
             showGameOver(120);
         }

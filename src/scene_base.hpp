@@ -26,11 +26,6 @@
 
 class SceneBase : public Scene
 {
-    inline static const uint8_t gfx[] = {0x03, 0x1f, 0x3f, 0x39, 0x3f, 0x06, 0x09, 0x04, 0x03, 0x1f, 0x3f, 0x39, 0x3f, 0x06, 0x0d, 0x18, 0x08, 0x04, 0x0f, 0x1b, 0x3f, 0x2f, 0x28, 0x06,
-                                         0x08, 0x24, 0x2f, 0x3b, 0x3f, 0x1f, 0x08, 0x10, 0x01, 0x03, 0x07, 0x0d, 0x0f, 0x02, 0x04, 0x02, 0x01, 0x03, 0x07, 0x0d, 0x0f, 0x02, 0x05, 0x0a,
-
-                                         0x01, 0x01, 0x03, 0x07, 0x43, 0x47, 0x6f, 0x7f};
-
 public:
     enum SpriteId { sidPlayer = 1, sidPlayerLaser, sidColonyShip = 10, sidColonyShipEnd = 15, sidAlienLaser = 50, sidAlienBomb, sidAlienStart = 100, sidAlienEnd = 228 };
     SceneBase() = default;
@@ -48,20 +43,6 @@ public:
                 star._d = GetRandomValue(10, 255);
             }
 
-            /*
-            _spriteSheet = GenImageColor(256, 256, {0,0,0,0});
-            const auto* ptr = gfx;
-            for(int i = 0; i < 7; ++i) {
-                for (int y = 0; y < 8; ++y, ++ptr) {
-                    for (int x = 0; x < 8; ++x) {
-                        if((*ptr & (1<<x))) {
-                            ImageDrawPixel(&_spriteSheet, i*16 + 7 - x, y, WHITE);
-                            ImageDrawPixel(&_spriteSheet, i*16 + 8 + x, y, WHITE);
-                        }
-                    }
-                }
-            }
-            */
             for (int id = sidAlienStart; id < sidAlienStart + 128; ++id) {
                 SpriteManager::instance()->generateAlien(id, 4);
             }
@@ -70,27 +51,7 @@ public:
             SpriteManager::instance()->generateAlien(sidColonyShip + 1, {125945237, 8, 48, true, false, false, true}, Sprite::ColonyShip);
             SpriteManager::instance()->insertImage(sidPlayerLaser, Procedural::generateBullet(BulletType::PlayerLaser), Sprite::Type::PlayerShot);
             SpriteManager::instance()->insertImage(sidAlienLaser, Procedural::generateBullet(BulletType::AlienLaser), Sprite::Type::AlienShot);
-            // SpriteManager::instance()->generateAlien(sidAlienBomb, {253101687, 5, 5, true, true, false, true}, Sprite::AlienBomb);
             SpriteManager::instance()->generateAlien(sidAlienBomb, {4903791, 5, 5, true, true, false, true}, Sprite::AlienBomb);
-
-#ifndef NDEBUG
-            SpriteManager::instance()->dump();
-#endif
-            /*
-            Gradient grad;
-            ImageDrawPixel(&_spriteSheet, 3, 8, grad.getColorAt(1.0f));
-            ImageDrawPixel(&_spriteSheet, 4, 8, grad.getColorAt(1.0f));
-            ImageDrawPixel(&_spriteSheet, 3, 9, grad.getColorAt(0.9f));
-            ImageDrawPixel(&_spriteSheet, 4, 9, grad.getColorAt(0.9f));
-            ImageDrawPixel(&_spriteSheet, 3, 10, grad.getColorAt(0.8f));
-            ImageDrawPixel(&_spriteSheet, 4, 10, grad.getColorAt(0.8f));
-            ImageDrawPixel(&_spriteSheet, 3, 11, grad.getColorAt(0.8f));
-            ImageDrawPixel(&_spriteSheet, 4, 11, grad.getColorAt(0.8f));
-            ImageDrawPixel(&_spriteSheet, 3, 12, grad.getColorAt(0.75f));
-            ImageDrawPixel(&_spriteSheet, 4, 12, grad.getColorAt(0.75f));
-            ImageDrawPixel(&_spriteSheet, 3, 13, grad.getColorAt(0.5f));
-            ImageDrawPixel(&_spriteSheet, 4, 13, grad.getColorAt(0.5f));
-            */
 
             _explosionColors.addMark(0.0f, {255, 255, 0, 255});
             _explosionColors.addMark(0.5f, {200, 100, 0, 255});
@@ -111,17 +72,15 @@ public:
             }
             _initialized = true;
         }
-        //_spriteTexture = LoadTextureFromImage(_spriteSheet);
-        // Sprite::_image = &_spriteSheet;
-        // Sprite::_texture = &_spriteTexture;
-        _alpha = 1.0f;
+         _alpha = 1.0f;
 
-        // SpriteManager::instance()->dump();
+#ifndef NDEBUG
+         SpriteManager::instance()->dump();
+#endif
     }
 
     void unloadBackground()
     {
-        // UnloadTexture(_spriteTexture);
     }
 
     void updateBackground(float dt_s, float timeFlow = 1.0f)
@@ -148,8 +107,6 @@ public:
         for (auto& star : _stars) {
             DrawRectangle(star._x, int(star._y), 1, 1, {uint8_t(star._d), uint8_t(star._d), uint8_t(star._d), 255});
         }
-
-        // DrawText("INVADE v" INVADE_VERSION_STRING_SHORT, 10, 10, 20, GREEN);
     }
 
 protected:
@@ -179,6 +136,5 @@ protected:
     inline static Gradient _alienLaserTrailColors;
     inline static Gradient _alienBombTrailColors;
     inline static std::array<Star, 100> _stars;
-    inline static ScoreInfo _lastScoreInfo{0, "", 0, 0, ""};
     inline static std::multimap<uint64_t, ScoreInfo, std::greater<>> _highscores;
 };
