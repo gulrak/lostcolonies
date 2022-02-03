@@ -186,7 +186,7 @@ bool FfmpegEncoder::Write(const unsigned char* data)
         return false;
     }
 
-    const int in_linesize[1] = {mContext.codec_context->width * 3};
+    const int in_linesize[1] = {mContext.codec_context->width * 4};
 
     sws_scale(mContext.sws_context, &data, in_linesize, 0, mContext.codec_context->height,  // src
               mContext.frame->data, mContext.frame->linesize                                // dst

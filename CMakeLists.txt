@@ -44,7 +44,7 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     endif()
 endif()
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug" OR WITH_RECORDING)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(LIBAV IMPORTED_TARGET
         libavdevice

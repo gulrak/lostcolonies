@@ -396,7 +396,7 @@ public:
         DrawText(TextFormat("COLONISTS: %d", _colonists), width()/2 + 40, 5, 10, RED);
         DrawText(TextFormat("LIVES: %d", _playerLives), width() - 50, 5, 10, RED);
 #ifndef NDEBUG
-        drawTextCentered(TextFormat("State:%d Time:%ds CS-Y: %0.3f", (int)_state, (int)_stateTime, _colonyShip._pos.y), height() - 10, 10, BLUE);
+        //drawTextCentered(TextFormat("State:%d Time:%ds CS-Y: %0.3f", (int)_state, (int)_stateTime, _colonyShip._pos.y), height() - 10, 10, BLUE);
 #endif
 
         if(_state == State::GameOver) {

@@ -13,6 +13,9 @@
 #include "scene_startup.hpp"
 #include "sound.hpp"
 #include "spritemanager.hpp"
+
+#include <rlgl.h>
+
 #ifdef WITH_FFMPEG
 #include "ffmpeg_encode.hpp"
 #endif
@@ -22,7 +25,15 @@
 #include "scene_generators.hpp"
 #endif
 
-#if defined(PLATFORM_WEB)
+#ifdef PLATFORM_DESKTOP
+#if defined(PLATFORM_DESKTOP)
+#ifdef __APPLE__
+#define GLFW_INCLUDE_NONE   // Disable the standard OpenGL header inclusion on GLFW3
+                            // NOTE: Already provided by rlgl implementation (on glad.h)
+#include "GLFW/glfw3.h"
+#endif
+#endif
+#elif defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
 #endif
 
@@ -42,12 +53,12 @@ public:
 #ifndef NDEBUG
         bool generator = false;
         std::string alienSheetFile;
-        std::string movieFile;
         cli.option({"-g", "--generator"}, generator, "run with generator ui instead of game");
         cli.option({"--generate-alien-sheet"}, alienSheetFile, "generate a bunch of random sprites and export");
-#ifdef WITH_FFMPEG
-        cli.option({"-r", "--record"}, movieFile, "record video under given name");
 #endif
+#ifdef WITH_FFMPEG
+        std::string movieFile;
+        cli.option({"-r", "--record"}, movieFile, "record video under given name");
 #endif
         // 👾 LOST COLONIES 🌘
         // Score: 5010, Level: 4
@@ -110,7 +121,7 @@ public:
         _currentScene->load();
 #ifdef WITH_FFMPEG
         if (!movieFile.empty()) {
-            if (!_encoder.Open(movieFile.c_str(), {GetScreenWidth() / 2, GetScreenHeight() / 2, 60, 500000, nullptr, 22, AV_PIX_FMT_RGBA, AV_PIX_FMT_YUV420P})) {
+            if (!_encoder.Open(movieFile.c_str(), {screenWidth, screenHeight, 60, 200000, nullptr, 22, AV_PIX_FMT_RGBA, AV_PIX_FMT_YUV420P})) {
                 TraceLog(LOG_ERROR, "Couldn't open video stream");
             }
         }
@@ -176,6 +187,9 @@ public:
                 SetMasterVolume(1.0f);
             }
         }
+        if(IsKeyPressed(KEY_T)) {
+            takeScreenshot("testscreenshot.png");
+        }
         if(!_pause) {
             auto t = std::min(GetFrameTime(), 2.0f / 60);
             _currentScene->update(t);
@@ -212,11 +226,12 @@ public:
 
 #ifdef WITH_FFMPEG
                 if (_encoder.IsOpen() /*&& _currentScene->renderMode() == RenderMode::Upscale2 && !(++_frameCount % 10)*/) {
-                    Image frame = LoadImageFromTexture(_renderTexture.texture);
-                    // ImageCrop(&frame, {0, GetScreenHeight() - _currentScene->height(), _currentScene->width(), -_currentScene->height()});
+                    //static int fc = 0;
+                    auto frame = grabScreenImage();
+                    ImageResizeNN(&frame, screenWidth, screenHeight);
+                    //ExportImage(frame, TextFormat("frame_%04d.png", fc++));
                     _encoder.Write((uint8_t*)frame.data);
                     UnloadImage(frame);
-                    // msf_gif_frame(&_gifState, (uint8_t*)frame.data, 10, 16, _currentScene->width()*4);
                 }
 #endif
                 break;
@@ -288,6 +303,28 @@ public:
                 _inTransition = false;
             }
         }
+    }
+
+    void takeScreenshot(const char *fileName)
+    {
+#ifndef PLATFORM_WEB
+        auto image = grabScreenImage();
+        ExportImage(image, fileName);
+        UnloadImage(image);
+        TRACELOG(LOG_INFO, "SYSTEM: [%s] Screenshot taken successfully", fileName);
+#endif
+    }
+
+    Image grabScreenImage()
+    {
+#if defined(PLATFORM_DESKTOP) && defined(__APPLE__)
+        int width, height;
+        glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
+        unsigned char *imgData = rlReadScreenPixels(width, height);
+        return Image{ imgData, width, height, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+#else
+        return LoadImageFromScreen();
+#endif
     }
 
 private:
