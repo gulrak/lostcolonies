@@ -135,7 +135,7 @@ public:
                         drawTextCentered(TextFormat("%02d.  %07d  %3s  L:%02d  C:%5d", count, (int)score, info.name.c_str(), info.level, info.colonists), count * 20 + 50, 10, BasePalette[colorIndices[((int)(_stateTime * 10) + count) % 4]]);
                     }
                 }
-                if (getProperty("last_score"_h, 0)) {
+                if (getProperty("last_score"_h, 0lu)) {
                     drawTextCentered("[press 'S' to share last result via clipboard]", 280, 10, WHITE);
                 }
                 break;

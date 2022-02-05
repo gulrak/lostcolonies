@@ -10,9 +10,14 @@ Random::Random(uint64_t initialSeed)
     seed(initialSeed);
 }
 
+Random::Random(int initialSeed)
+{
+    seed(static_cast<uint64_t>(initialSeed));
+}
+
 Random* Random::instance()
 {
-    static Random _instance{std::time(nullptr)};
+    static Random _instance{static_cast<uint64_t>(std::time(nullptr))};
     return &_instance;
 }
 

@@ -69,10 +69,10 @@ void SpriteManager::insertImage(int id, Image image, Sprite::Type type)
     auto slot = SlotInfo{row->slots.empty() ? 0 : row->slots.back().xPos + row->slots.back().width, image.width, true};
     TraceLog(LOG_INFO, "SpriteManager: Allocated image slot at {%d,%d,%d,%d}", slot.xPos, row->yPos, image.width, image.height);
     row->slots.push_back(slot);
-    ImageDraw(&_spriteSheet, image, {0, 0, image.width, image.height}, {slot.xPos, row->yPos, image.width, image.height}, WHITE);
+    ImageDraw(&_spriteSheet, image, {0, 0, static_cast<float>(image.width), static_cast<float>(image.height)}, {static_cast<float>(slot.xPos), static_cast<float>(row->yPos), static_cast<float>(image.width), static_cast<float>(image.height)}, WHITE);
     UnloadImage(image);
     UpdateTexture(_spriteTexture, _spriteSheet.data);
-    _sprites.insert_or_assign(id, Sprite{type, {0,0}, {0,0}, {slot.xPos, row->yPos, image.width, image.height}, {0,0,0,0}, WHITE, 0, &_spriteTexture, &_spriteSheet});
+    _sprites.insert_or_assign(id, Sprite{type, {0,0}, {0,0}, {static_cast<float>(slot.xPos), static_cast<float>(row->yPos), static_cast<float>(image.width), static_cast<float>(image.height)}, {0,0,0,0}, WHITE, 0, &_spriteTexture, &_spriteSheet});
 }
 
 void SpriteManager::dump() const

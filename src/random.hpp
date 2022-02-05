@@ -9,6 +9,7 @@ class Random
 public:
     inline static constexpr uint32_t MaxU32Value{0x7fffffff};
     explicit Random(uint64_t initialSeed);
+    explicit Random(int initialSeed);
     void seed(uint64_t newSeed);
     void seed(const std::string& newSeed);
     uint32_t randomU32();
@@ -24,5 +25,5 @@ public:
     Vector3 randomVec3(const Vector3& direction, float angle, float offsetRange = 0.0f);
     static Random* instance();
 private:
-    uint64_t _state[2];
+    uint64_t _state[2]{};
 };

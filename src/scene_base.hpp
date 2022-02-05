@@ -67,8 +67,8 @@ public:
             _playerEngineTrailColors.addMark(0.0f, {10, 200, 200, 128});
             _playerEngineTrailColors.addMark(1.0f, {10, 200, 200, 0});
 
-            for (int i = 0; i < 10; ++i) {
-                _highscores.emplace(i * 10, ScoreInfo{i * 10, "---", 1, i * 2, "---"});
+            for (unsigned short i = 0; i < 10; ++i) {
+                _highscores.emplace(i * 10, ScoreInfo{i * 10u, "---", 1, i * 2, "---"});
             }
             _initialized = true;
         }

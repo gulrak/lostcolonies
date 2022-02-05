@@ -28,8 +28,8 @@
 #ifdef PLATFORM_DESKTOP
 #if defined(PLATFORM_DESKTOP)
 #ifdef __APPLE__
-#define GLFW_INCLUDE_NONE   // Disable the standard OpenGL header inclusion on GLFW3
-                            // NOTE: Already provided by rlgl implementation (on glad.h)
+#define GLFW_INCLUDE_NONE  // Disable the standard OpenGL header inclusion on GLFW3
+                           // NOTE: Already provided by rlgl implementation (on glad.h)
 #include "GLFW/glfw3.h"
 #endif
 #endif
@@ -80,8 +80,10 @@ public:
                     auto shipParams = Procedural::randomAlienSpaceshipParams(4, 0);
                     // shipParams.randSeed = rg.randomInt(1,0xffff);
                     auto img = Procedural::generateSpaceship(shipParams);
-                    imageDrawText8x8(sheet, TextFormat("%04x", shipParams.randSeed), xpos + (tileWidth - 4 * 8) / 2, ypos + 2, WHITE);
-                    ImageDraw(&sheet, img, {0, 0, img.width, img.height}, {xpos + (tileWidth - img.width) / 2, ypos + 12, img.width, img.height}, WHITE);
+                    imageDrawText8x8(sheet, TextFormat("%04x", shipParams.randSeed), xpos + (tileWidth - 4 * 8) / 2,
+                                     ypos + 2, WHITE);
+                    ImageDraw(&sheet, img, {0, 0, img.width, img.height},
+                              {xpos + (tileWidth - img.width) / 2, ypos + 12, img.width, img.height}, WHITE);
                     UnloadImage(img);
                 }
             }
@@ -95,14 +97,22 @@ public:
         InitAudioDevice();
 
         auto* sm = SoundManager::instance();
-        sm->generateSounds(SoundId::Explosion, {{0.3f, {36415,     3,         0.000000f, 0.286630f, 0.277880f, 0.458200f, 0.071974f,  0.000000f, 0.000160f, 0.000000f, 0.000000f, 0.000000f,
-                                                        0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.441780f, -0.230100f, 1.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f}},
-                                                {0.3f, {3854,      3,         0.000000f, 0.363130f, 0.517100f, 0.355000f, 0.123707f,  0.000000f, -0.057160f, 0.000000f, 0.000000f, 0.000000f,
-                                                        0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.182670f, -0.138390f, 1.000000f, 0.000000f,  0.000000f, 0.000000f, 0.000000f}},
-                                                {0.4f, {58754,     3,         0.000000f, 0.347710f, 0.590840f, 0.073750f, 0.012841f, 0.000000f, 0.120600f, 0.000000f, 0.000000f, 0.000000f,
-                                                        0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f, 1.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f}}});
-        sm->generateSounds(SoundId::Laser, {{1.0f, {9301,      0,         0.000000f, 0.187960f,  0.019440f, 0.196960f, 0.224141f,  0.347600f, 0.294766f, 0.000000f, 0.000000f, 0.000000f,
-                                                    0.000000f, 0.000000f, 0.891650f, -0.585410f, 0.000000f, 0.000260f, -0.184540f, 1.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f}}});
+        sm->generateSounds(
+            SoundId::Explosion,
+            {{0.3f, {36415,     3,         0.000000f,  0.286630f, 0.277880f, 0.458200f, 0.071974f, 0.000000f,
+                     0.000160f, 0.000000f, 0.000000f,  0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f,
+                     0.000000f, 0.441780f, -0.230100f, 1.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f}},
+             {0.3f, {3854,       3,         0.000000f,  0.363130f, 0.517100f, 0.355000f, 0.123707f, 0.000000f,
+                     -0.057160f, 0.000000f, 0.000000f,  0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f,
+                     0.000000f,  0.182670f, -0.138390f, 1.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f}},
+             {0.4f, {58754,     3,         0.000000f, 0.347710f, 0.590840f, 0.073750f, 0.012841f, 0.000000f,
+                     0.120600f, 0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f,
+                     0.000000f, 0.000000f, 0.000000f, 1.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f}}});
+        sm->generateSounds(
+            SoundId::Laser,
+            {{1.0f, {9301,      0,         0.000000f,  0.187960f, 0.019440f, 0.196960f, 0.224141f, 0.347600f,
+                     0.294766f, 0.000000f, 0.000000f,  0.000000f, 0.000000f, 0.000000f, 0.891650f, -0.585410f,
+                     0.000000f, 0.000260f, -0.184540f, 1.000000f, 0.000000f, 0.000000f, 0.000000f, 0.000000f}}});
         // auto mecha = ResourceManager::instance().resourceForName("mecha.png");
         // auto image = LoadImageFromMemory(".png", mecha.data(), int(mecha.size()));
         //_font = LoadFontFromImage(image, {255,0,255,255}, ' ');
@@ -121,7 +131,8 @@ public:
         _currentScene->load();
 #ifdef WITH_FFMPEG
         if (!movieFile.empty()) {
-            if (!_encoder.Open(movieFile.c_str(), {screenWidth, screenHeight, 60, 200000, nullptr, 22, AV_PIX_FMT_RGBA, AV_PIX_FMT_YUV420P})) {
+            if (!_encoder.Open(movieFile.c_str(), {screenWidth, screenHeight, 60, 200000, nullptr, 22, AV_PIX_FMT_RGBA,
+                                                   AV_PIX_FMT_YUV420P})) {
                 TraceLog(LOG_ERROR, "Couldn't open video stream");
             }
         }
@@ -175,22 +186,22 @@ public:
 
     void updateFrame()
     {
-        if(IsKeyPressed(KEY_P)) {
+        if (IsKeyPressed(KEY_P)) {
             _pause = !_pause;
         }
-        if(IsKeyPressed(KEY_M)) {
+        if (IsKeyPressed(KEY_M)) {
             _mute = !_mute;
-            if(_mute) {
+            if (_mute) {
                 SetMasterVolume(0.0f);
             }
             else {
                 SetMasterVolume(1.0f);
             }
         }
-        if(IsKeyPressed(KEY_T)) {
+        if (IsKeyPressed(KEY_T)) {
             takeScreenshot("testscreenshot.png");
         }
-        if(!_pause) {
+        if (!_pause) {
             auto t = std::min(GetFrameTime(), 2.0f / 60);
             _currentScene->update(t);
         }
@@ -209,27 +220,29 @@ public:
                 BeginTextureMode(_renderTexture);
                 ClearBackground(RAYWHITE);
                 _currentScene->render();
-                if(_mute) {
+                if (_mute) {
                     DrawText("[MUTE]", 8, _currentScene->height() - 10, 10, WHITE);
                 }
                 auto fps = GetFPS();
-                if(fps < 55 || fps > 64) {
-                    DrawText(TextFormat("%3d", GetFPS()), _currentScene->width() - 20, _currentScene->height() - 10, 10, GREEN);
+                if (fps < 55 || fps > 64) {
+                    DrawText(TextFormat("%3d", GetFPS()), _currentScene->width() - 20, _currentScene->height() - 10, 10,
+                             GREEN);
                 }
                 EndTextureMode();
                 BeginDrawing();
-                DrawTexturePro(_renderTexture.texture, {0, GetScreenHeight() - _currentScene->height(), _currentScene->width(), -_currentScene->height()}, {0, 0, GetScreenWidth(), GetScreenHeight()}, {0.0f, 0.0f}, 0.0f, WHITE);
+                DrawTexturePro(_renderTexture.texture,
+                               {0, (float)GetScreenHeight() - _currentScene->height(), (float)_currentScene->width(),
+                                (float)-_currentScene->height()},
+                               {0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()}, {0.0f, 0.0f}, 0.0f, WHITE);
                 if (_inTransition) {
                     DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, _transAlpha));
                 }
                 EndDrawing();
 
 #ifdef WITH_FFMPEG
-                if (_encoder.IsOpen() /*&& _currentScene->renderMode() == RenderMode::Upscale2 && !(++_frameCount % 10)*/) {
-                    //static int fc = 0;
+                if (_encoder.IsOpen()) {
                     auto frame = grabScreenImage();
                     ImageResizeNN(&frame, screenWidth, screenHeight);
-                    //ExportImage(frame, TextFormat("frame_%04d.png", fc++));
                     _encoder.Write((uint8_t*)frame.data);
                     UnloadImage(frame);
                 }
@@ -305,7 +318,7 @@ public:
         }
     }
 
-    void takeScreenshot(const char *fileName)
+    void takeScreenshot(const char* fileName)
     {
 #ifndef PLATFORM_WEB
         auto image = grabScreenImage();
@@ -320,8 +333,8 @@ public:
 #if defined(PLATFORM_DESKTOP) && defined(__APPLE__)
         int width, height;
         glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
-        unsigned char *imgData = rlReadScreenPixels(width, height);
-        return Image{ imgData, width, height, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+        unsigned char* imgData = rlReadScreenPixels(width, height);
+        return Image{imgData, width, height, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};
 #else
         return LoadImageFromScreen();
 #endif

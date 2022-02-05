@@ -55,7 +55,7 @@ public:
             auto id = GetRandomValue(sidAlienStart, sidAlienEnd-1);
             for (int col = 0; col < 15; ++col) {
                 if((col + row) & 1) {
-                    auto sprite = SpriteManager::instance()->getSprite(id, {offset + static_cast<float>(col * 20) + 8, static_cast<float>(row * 16 + 32)});
+                    auto sprite = SpriteManager::instance()->getSprite(id, {offset + col * 20.0f + 8, row * 16.0f + 32});
                     _aliens.push_back(sprite);
                 }
                 //_aliens.push_back({Sprite::Alien, {static_cast<float>(col * 20) + 8, static_cast<float>(row * 16 + 32)}, {0.0f, 0.0f}, {static_cast<float>(int((5 - row) / 2) * 32) + 16, 0, 16, 8}, {static_cast<float>(int((5 - row) / 2) * 32), 0, 16, 8},
@@ -63,8 +63,8 @@ public:
             }
         }
         _playerSprite = SpriteManager::instance()->getSprite(sidPlayer);
-        _playerSprite._pos = {width() / 2 + 8, height() - 48};
-        _colonyShip = SpriteManager::instance()->getSprite(sidColonyShip, {width()/2 + width()/3 - 20, height() - 48 - 32});
+        _playerSprite._pos = {width() / 2.0f + 8, height() - 48.0f};
+        _colonyShip = SpriteManager::instance()->getSprite(sidColonyShip, {width()/2.0f + width()/3.0f - 20, height() - 48.0f - 32});
         _speed = 1.0f + (_level - 1)/5;
         _currentPlanet = getRandomPlanetName();
         generateTerrain(_currentPlanet);
@@ -251,7 +251,7 @@ public:
             }
             else if(projectile._type == Sprite::AlienBomb) {
                 if(!(_frameCount & 3)) {
-                    _particles.emplace_back(Particle2::eFADE, Vector2{projectile._pos.x + 4, projectile._pos.y + 3}, Vector2{GetRandomValue(-30, 30), 0.1f}, BLACK, 1500);
+                    _particles.emplace_back(Particle2::eFADE, Vector2{projectile._pos.x + 4, projectile._pos.y + 3}, Vector2{(float)GetRandomValue(-30, 30), 0.1f}, BLACK, 1500);
                     _particles.back().gradient = &_alienLaserTrailColors;
                 }
                 if (_playerSprite.isColliding(projectile) && _playerSprite._type == Sprite::Player) {
@@ -359,7 +359,7 @@ public:
             }
             else {
                 if(_pixelOverGround > 0) {
-                    alien.draw({0, -_pixelOverGround}, (static_cast<int>(alien._pos.x) & 16));
+                    alien.draw({0, (float)-_pixelOverGround}, (static_cast<int>(alien._pos.x) & 16));
                 }
                 else {
                     alien.draw((static_cast<int>(alien._pos.x) & 16));
@@ -389,7 +389,7 @@ public:
         }
 
         if(_alpha < 1.0f) {
-            DrawRectangle(0,0,width(), height(), {0,0,0,255 * (1.0f-_alpha)});
+            DrawRectangle(0,0,width(), height(), {0,0,0,(uint8_t)(255 * (1.0f-_alpha))});
         }
         DrawText(TextFormat("SCORE: %d", _score), 16, 5, 10, RED);
         DrawText(TextFormat("LEVEL: %d", _level), width()/2 - 75, 5, 10, RED);
@@ -526,7 +526,7 @@ protected:
     void message(std::string msg, int x, int y, int time_ms)
     {
         auto w = MeasureText(msg.c_str(), 10);
-        _messages.push_back({x - w/2, y, std::move(msg), _frameCount + time_ms/16.6667f, {255,255,255,128}});
+        _messages.push_back({x - w/2, y, std::move(msg), (int)(_frameCount + time_ms/16.6667f), {255,255,255,128}});
     }
     State _state{State::Init};
     SceneId _finishScreen = SceneId::IngameScene;

@@ -292,7 +292,7 @@ Image Procedural::generateBullet(BulletType type, int seed)
                     ImageDrawPixel(&result, 5, l, {255,255,255,10});
                 }
                 else {
-                    int c = 255.0 * brightness;
+                    auto c = static_cast<uint8_t>(255 * brightness);
                     ImageDrawPixel(&result, 2, l, {c, c, c, 80});
                     ImageDrawPixel(&result, 3, l, {c, c, c, 255});
                     ImageDrawPixel(&result, 4, l, {c, c, c, 255});
