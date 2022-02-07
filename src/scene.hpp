@@ -114,7 +114,7 @@ public:
         if constexpr (std::is_integral<T>::value && !std::is_same<T, bool>::value) {
             // std::nullptr_t,bool,int64_t,float,std::string,Color,Vector2,Vector3
             return std::visit(visitor{[defaultValue](const auto&) { return defaultValue; },
-                                      [defaultValue](std::int64_t val) { return (T)val; }}, iter->second);
+                                      [](const std::int64_t& val) { return (T)val; }}, iter->second);
         }
         else {
             return std::holds_alternative<T>(iter->second) ? std::get<T>(iter->second) : defaultValue;

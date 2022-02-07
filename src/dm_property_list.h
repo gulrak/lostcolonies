@@ -738,7 +738,7 @@ void GuiDMPropertyList(Rectangle bounds, GuiDMProperty* props, int count, int* f
                         }
                         
                         // support COPY/PASTE (need to do this here since GuiDMValueBox() also has COPY/PASTE so we need to overwrite it)
-                        if((propState == GUI_STATE_FOCUSED)) { 
+                        if(propState == GUI_STATE_FOCUSED) {
                             if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_C)) 
                                 SetClipboardText(clip);
                             else if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_V)){
