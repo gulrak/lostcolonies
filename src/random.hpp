@@ -1,7 +1,7 @@
 #pragma once
 
 #include "config.hpp"
-#include "math.hpp"
+#include "raymath.hpp"
 #include <string>
 
 class Random

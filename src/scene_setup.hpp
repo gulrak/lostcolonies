@@ -61,7 +61,7 @@ public:
                 break;
             }
         }
-        if (getProperty("last_score"_h, 0lu) && IsKeyPressed(KEY_S)) {
+        if (getProperty("last_score"_h, 0) && IsKeyPressed(KEY_S)) {
 #ifdef __EMSCRIPTEN__
             jsWriteClipboard((std::string("\xf0\x9f\x8c\x98 LOST COLONIES v" LOSTCOLONIES_VERSION_STRING_SHORT " \xf0\x9f\x91\xbe\nScore: ") + std::to_string(getProperty("last_score"_h, 0lu)) +
                               ", Level: " + std::to_string(getProperty("last_level"_h, 0)) +
@@ -122,7 +122,7 @@ public:
             case State::Highscore: {
                 static int colorIndices[4] = {13, 14, 15, 14};
                 drawTextCentered("HIGHSCORES", 40, 20, WHITE);
-                size_t count = 0;
+                int count = 0;
                 auto lastScore =  getProperty("last_score"_h, 0lu);
                 auto lastLevel = getProperty("last_level"_h, 0);
                 auto lastPlanet = getProperty("last_planet"_h, ""s);

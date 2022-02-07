@@ -39,7 +39,7 @@ void Scene::drawTextBoxedSelectable(const char *text, Rectangle rec, float fontS
         float glyphWidth = 0;
         if (codepoint != '\n')
         {
-            glyphWidth = (font.glyphs[index].advanceX == 0) ? font.recs[index].width*scaleFactor : font.glyphs[index].advanceX*scaleFactor;
+            glyphWidth = (font.glyphs[index].advanceX == 0) ? font.recs[index].width*scaleFactor : (float)font.glyphs[index].advanceX*scaleFactor;
 
             if (i + 1 < length) glyphWidth = glyphWidth + spacing;
         }
@@ -88,7 +88,7 @@ void Scene::drawTextBoxedSelectable(const char *text, Rectangle rec, float fontS
             {
                 if (!wordWrap)
                 {
-                    textOffsetY += (font.baseSize + font.baseSize/2)*scaleFactor;
+                    textOffsetY += (float)(font.baseSize + font.baseSize/2)*scaleFactor;
                     textOffsetX = 0;
                 }
             }
@@ -96,12 +96,12 @@ void Scene::drawTextBoxedSelectable(const char *text, Rectangle rec, float fontS
             {
                 if (!wordWrap && ((textOffsetX + glyphWidth) > rec.width))
                 {
-                    textOffsetY += (font.baseSize + font.baseSize/2)*scaleFactor;
+                    textOffsetY += (float)(font.baseSize + font.baseSize/2)*scaleFactor;
                     textOffsetX = 0;
                 }
 
                 // When text overflows rectangle height limit, just stop drawing
-                if ((textOffsetY + font.baseSize*scaleFactor) > rec.height) break;
+                if ((textOffsetY + (float)font.baseSize*scaleFactor) > rec.height) break;
 
                 // Draw selection background
                 bool isGlyphSelected = false;
@@ -120,7 +120,7 @@ void Scene::drawTextBoxedSelectable(const char *text, Rectangle rec, float fontS
 
             if (wordWrap && (i == endLine))
             {
-                textOffsetY += (font.baseSize + font.baseSize/2)*scaleFactor;
+                textOffsetY += float(font.baseSize + font.baseSize/2)*scaleFactor;
                 textOffsetX = 0;
                 startLine = endLine;
                 endLine = -1;
@@ -139,5 +139,5 @@ void Scene::drawTextBoxedSelectable(const char *text, Rectangle rec, float fontS
 void Scene::drawTextCentered(const char* text, int y, int fontSize, Color tint)
 {
     auto w = MeasureText(text, fontSize);
-    DrawText(text, (width() - w)/2 + 0.5f, y + 0.5f, fontSize, tint);
+    DrawText(text, ((int)width() - w)/2, y, fontSize, tint);
 }

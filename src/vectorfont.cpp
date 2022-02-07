@@ -1,5 +1,6 @@
+#include "config.hpp"
+#include "raymath.hpp"
 #include "vectorfont.hpp"
-#include <raymath.h>
 #include <map>
 
 static const std::map<char, std::string> _font = {
@@ -75,7 +76,7 @@ float VectorFont::drawGlyph(char glyph, Vector2 position, float size, Color col)
                 }
             }
         }
-        return width * scale;
+        return (float)width * scale;
     }
     return 0;
 }
@@ -96,7 +97,7 @@ float VectorFont::textWidth(const std::string& text, float size)
     for (auto c : text) {
         auto iter = _font.find(c);
         if (iter != _font.end()) {
-            width += std::stoi(iter->second.substr(2, 2)) * scale;
+            width += (float)std::stoi(iter->second.substr(2, 2)) * scale;
         }
     }
     return width;

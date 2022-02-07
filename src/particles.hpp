@@ -3,7 +3,7 @@
 #include <raylib.h>
 
 #include "gradient.hpp"
-#include "math.hpp"
+#include "raymath.hpp"
 #include "random.hpp"
 
 template <typename Vector_t = Vector2>

@@ -1,7 +1,18 @@
 #pragma once
 
+#include "config.hpp"
+
+DISABLE_WARNING_PUSH
+
+DISABLE_WARNING_CONVERSION
+DISABLE_WARNING_ENUM_COMPARE
+DISABLE_WARNING_USELESS_CAST
+
 #include <raymath.h>
-#include <cmath>
+
+DISABLE_WARNING_POP
+
+
 
 inline Vector2 operator+(const Vector2& a, const Vector2& b)
 {

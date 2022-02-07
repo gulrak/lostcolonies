@@ -1,10 +1,9 @@
 #pragma once
 
 #include <raylib.h>
-#include <raymath.h>
 #include <algorithm>
 #include <vector>
-#include "math.hpp"
+#include "raymath.hpp"
 
 struct Sprite
 {

@@ -55,7 +55,7 @@ public:
             auto id = GetRandomValue(sidAlienStart, sidAlienEnd-1);
             for (int col = 0; col < 15; ++col) {
                 if((col + row) & 1) {
-                    auto sprite = SpriteManager::instance()->getSprite(id, {offset + col * 20.0f + 8, row * 16.0f + 32});
+                    auto sprite = SpriteManager::instance()->getSprite(id, {offset + (float)col * 20.0f + 8, (float)row * 16.0f + 32});
                     _aliens.push_back(sprite);
                 }
                 //_aliens.push_back({Sprite::Alien, {static_cast<float>(col * 20) + 8, static_cast<float>(row * 16 + 32)}, {0.0f, 0.0f}, {static_cast<float>(int((5 - row) / 2) * 32) + 16, 0, 16, 8}, {static_cast<float>(int((5 - row) / 2) * 32), 0, 16, 8},
@@ -65,7 +65,7 @@ public:
         _playerSprite = SpriteManager::instance()->getSprite(sidPlayer);
         _playerSprite._pos = {width() / 2.0f + 8, height() - 48.0f};
         _colonyShip = SpriteManager::instance()->getSprite(sidColonyShip, {width()/2.0f + width()/3.0f - 20, height() - 48.0f - 32});
-        _speed = 1.0f + (_level - 1)/5;
+        _speed = 1.0f + float(_level - 1)/5;
         _currentPlanet = getRandomPlanetName();
         generateTerrain(_currentPlanet);
         _colonists = _random.randomInt(40,250);
@@ -99,7 +99,7 @@ public:
             }
             setState(State::LevelComplete);
         }
-        auto spd = 57.0f + (90.0f - static_cast<float>(_aliens.size())) + _level * 3;
+        auto spd = 57.0f + (90.0f - static_cast<float>(_aliens.size())) + (float)_level * 3;
         _speed = _speed < 0 ? -spd : spd;
         float stepDown = 0.0f;
         if(_state != State::Init) {
@@ -120,8 +120,8 @@ public:
                 }
             }
             int bombAlien = -1;
-            if(_state == State::Playing && _nextAlienBombTime < _stateTime && !_aliens.empty()) {
-                bombAlien = GetRandomValue(0, _aliens.size()-1);
+            if(_state == State::Playing && (float)_nextAlienBombTime < _stateTime && !_aliens.empty()) {
+                bombAlien = GetRandomValue(0, (int)_aliens.size()-1);
             }
             int countAliens = 0;
             for (auto& alien : _aliens) {
@@ -133,7 +133,7 @@ public:
                     }
                     if(bombAlien >= 0 && bombAlien >= countAliens && alien._type != Sprite::Unused && alien._pos.y < height() - 100) {
                         _projectiles.push_back(SpriteManager::instance()->getSprite(sidAlienBomb, {alien._pos.x + 2, alien._pos.y + alien._sprite.height}, {0.0f, 0.8f}));
-                        _nextAlienBombTime = _stateTime + _random.randomInt(10,30);
+                        _nextAlienBombTime = int(_stateTime + (float)_random.randomInt(10,30));
                         bombAlien = -1;
                     }
                     else if (GetRandomValue(0, 1500) < 1) {
@@ -306,7 +306,7 @@ public:
                 _projectiles.push_back(SpriteManager::instance()->getSprite(sidPlayerLaser, {_playerSprite._pos.x + 4, _playerSprite._pos.y - 6}, {0.0f, -1.5f}, {0, 200, 255, 255}));
                 SoundManager::instance()->playSound(SoundId::Laser);
             }
-            _particles.emplace_back(Particle2::eFADE, Vector2{_playerSprite._pos.x + GetRandomValue(6, 9), _playerSprite._pos.y + 15}, Vector2{0, 60.0f}, BLACK, 300);
+            _particles.emplace_back(Particle2::eFADE, Vector2{_playerSprite._pos.x + (float)GetRandomValue(6, 9), _playerSprite._pos.y + 15}, Vector2{0, 60.0f}, BLACK, 300);
             _particles.back().gradient = &_playerEngineTrailColors;
         }
         if(_state == State::GameOver && (_stateTime > GameOverStateTime || (_stateTime > 2 && IsKeyPressed(KEY_SPACE))) && _finishScreen != SceneId::SetupScene) {
@@ -355,7 +355,7 @@ public:
         }
         for (auto& alien : _aliens) {
             if (alien._type == Sprite::Unused) {
-                DrawCircle(alien._pos.x + 6, alien._pos.y + 4, GetRandomValue(5, 12), WHITE);
+                DrawCircle(alien._pos.x + 6, alien._pos.y + 4, (float)GetRandomValue(5, 12), WHITE);
             }
             else {
                 if(_pixelOverGround > 0) {
@@ -371,7 +371,7 @@ public:
         }
         if(_colonyShip._type == Sprite::ColonyShip) {
             if(std::fabs(_colonyShip._velocity.y) <= 0.001) {
-                auto surface = 1000 - _pixelOverGround + height() - 32;
+                auto surface = 1000 - (float)_pixelOverGround + height() - 32;
                 _colonyShip._pos.y = surface - 48;
             }
             _colonyShip.draw();
@@ -464,8 +464,8 @@ public:
         static std::vector<std::string> numbers = {"II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"};
         std::string result;
         do {
-            auto star = _levelSequenceRandom.randomInt(0, starNames.size() - 1);
-            auto planet = _levelSequenceRandom.randomInt(0, numbers.size() - 1);
+            auto star = _levelSequenceRandom.randomInt(0, (int)starNames.size() - 1);
+            auto planet = _levelSequenceRandom.randomInt(0, (int)numbers.size() - 1);
             result = starNames[star] + " " + numbers[planet];
         } while(_savedPlanets.count(result));
         return result;
@@ -474,10 +474,10 @@ public:
     void renderTerrain()
     {
         static const int buildings[] = { 10, 14, 8,12 };
-        auto left = width()/2;
-        auto right = left + width()/3;
+        int left = (int)width()/2;
+        int right = left + (int)width()/3;
         auto dome = left + 75;
-        auto surface = 1000 - _pixelOverGround + height() - 32;
+        auto surface = 1000 - _pixelOverGround + (int)height() - 32;
         if(_pixelOverGround > 900) {
             // Geo-Dome
             DrawCircle(dome, surface, 24, BasePalette[3]);
@@ -491,7 +491,7 @@ public:
             for (int i = 0; i < left; ++i) {
                 DrawRectangle(i, surface - _terrainHeight[1024 - left + i], 1, 100, BasePalette[17]);
             }
-            for (int i = right; i < width(); ++i) {
+            for (int i = right; i < (int)width(); ++i) {
                 DrawRectangle(i, surface - _terrainHeight[i - right], 1, 100, BasePalette[17]);
             }
             DrawRectangle(left, surface, right - left, 48, BasePalette[17]);
@@ -513,12 +513,12 @@ protected:
             _particles.back().gradient = &_explosionColors;
         }
     }
-    void generateTerrain(size_t left, size_t right, int disp)
+    void generateTerrain(size_t left, size_t right, float disp)
     {
         if(left + 1 >= right) return;
         auto between = std::floor((left + right) / 2);
         auto delta = (_random.randomUFloat() * 2 - 1) * disp;
-        _terrainHeight[between] = (_terrainHeight[left] + _terrainHeight[right]) / 2 + delta;
+        _terrainHeight[between] = (_terrainHeight[left] + _terrainHeight[right]) / 2 + (int)delta;
         disp = disp * 0.7f;
         generateTerrain(left, between, disp);
         generateTerrain(between, right, disp);
@@ -526,7 +526,7 @@ protected:
     void message(std::string msg, int x, int y, int time_ms)
     {
         auto w = MeasureText(msg.c_str(), 10);
-        _messages.push_back({x - w/2, y, std::move(msg), (int)(_frameCount + time_ms/16.6667f), {255,255,255,128}});
+        _messages.push_back({x - w/2, y, std::move(msg), _frameCount + int((float)time_ms/16.6667f), {255,255,255,128}});
     }
     State _state{State::Init};
     SceneId _finishScreen = SceneId::IngameScene;
@@ -545,7 +545,7 @@ protected:
         int x{0};
         int y{0};
         std::string text;
-        int lifetime{0};
+        int64_t lifetime{0};
         Color color;
     };
     std::vector<Message> _messages;

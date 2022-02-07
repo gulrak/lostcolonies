@@ -148,7 +148,7 @@ public:
             for (int x = 0; x < _width; ++x) {
                 if (at(x, y) == 1) {
                     auto cidx = rnd.randomInt(2,5);
-                    floodFill(x, y, cidx);
+                    floodFill(x, y, int8_t(cidx));
                 }
             }
         }
@@ -243,7 +243,7 @@ Image Procedural::generateSpaceship(const SpaceshipParams& params, int* numColor
         }
     }
     if(numColorsUsed) {
-        *numColorsUsed = colorsUsed.size();
+        *numColorsUsed = (int)colorsUsed.size();
     }
     return img;
 }
@@ -1025,4 +1025,5 @@ WaveParams Procedural::generateRandomSet(NoiseType type)
         case NoiseType::BLIP_SELECT:
             return GenBlipSelect();
     }
+    return GenRandomize();
 }

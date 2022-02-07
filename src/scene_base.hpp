@@ -2,8 +2,8 @@
 
 #include <external/msf_gif.h>
 #include <raylib.h>
-#include <raymath.h>
 
+#include "config.hpp"
 #include "gradient.hpp"
 #include "scene.hpp"
 #include "spritemanager.hpp"

@@ -8,7 +8,7 @@ include(CMakeDependentOption)
 if(NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
-    set(CMAKE_CXX_EXTENSIONS OFF)
+    set(CMAKE_CXX_EXTENSIONS ON)
 endif()
 
 # avoid masses of targets for CDash
@@ -70,16 +70,12 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         -Wpedantic
         -Wconversion
         -Wno-sign-conversion
-        -Wno-implicit-int-conversion
-        -Wno-shorten-64-to-32
         -Wnull-dereference
         -Wno-double-promotion
         -Wno-missing-field-initializers
         -Wno-sign-compare
         -Wno-float-conversion
-        -Wno-gnu-binary-literal
         -Wno-unused-parameter
-        -Wno-newline-eof
         -Wformat=2
         )
     if(WITH_WARNING_AS_ERROR)
@@ -94,6 +90,13 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
             -Wlogical-op
             -Wuseless-cast
             )
+    else()
+        target_compile_options(compiler_options INTERFACE
+            -Wno-implicit-int-conversion
+            -Wno-gnu-binary-literal
+            -Wno-newline-eof
+            -Wno-shorten-64-to-32
+        )
     endif()
 endif()
 

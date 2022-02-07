@@ -1,5 +1,7 @@
 #pragma once
 
+#include "config.hpp"
+
 #include <cstdlib>
 #include <functional>
 #include <map>
@@ -8,9 +10,6 @@
 #include <type_traits>
 #include <variant>
 #include <vector>
-
-template<class... Ts> struct visitor : Ts... { using Ts::operator()...;  };
-template<class... Ts> visitor(Ts...) -> visitor<Ts...>;
 
 class CLI
 {

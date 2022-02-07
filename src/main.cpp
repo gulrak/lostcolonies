@@ -25,14 +25,12 @@
 #include "scene_generators.hpp"
 #endif
 
-#ifdef PLATFORM_DESKTOP
 #if defined(PLATFORM_DESKTOP)
-#ifdef __APPLE__
+//#ifdef __APPLE__
 #define GLFW_INCLUDE_NONE  // Disable the standard OpenGL header inclusion on GLFW3
                            // NOTE: Already provided by rlgl implementation (on glad.h)
 #include "GLFW/glfw3.h"
-#endif
-#endif
+//#endif
 #elif defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
 #endif
@@ -64,7 +62,7 @@ public:
         // Score: 5010, Level: 4
         cli.parse();
 
-        SetTraceLogLevel(logLevel);
+        SetTraceLogLevel((int)logLevel);
 
 #ifndef NDEBUG
         if (!alienSheetFile.empty()) {
@@ -75,15 +73,15 @@ public:
             Random::instance()->seed(4711);
             for (int y = 0; y < 2048 / tileHeight; ++y) {
                 for (int x = 0; x < 2048 / tileWidth; ++x) {
-                    auto xpos = x * tileWidth;
-                    auto ypos = y * tileHeight;
+                    auto xpos = (float)(x * tileWidth);
+                    auto ypos = (float)(y * tileHeight);
                     auto shipParams = Procedural::randomAlienSpaceshipParams(4, 0);
                     // shipParams.randSeed = rg.randomInt(1,0xffff);
                     auto img = Procedural::generateSpaceship(shipParams);
-                    imageDrawText8x8(sheet, TextFormat("%04x", shipParams.randSeed), xpos + (tileWidth - 4 * 8) / 2,
+                    imageDrawText8x8(sheet, TextFormat("%04x", shipParams.randSeed), xpos + float(tileWidth - 4 * 8) / 2,
                                      ypos + 2, WHITE);
-                    ImageDraw(&sheet, img, {0, 0, img.width, img.height},
-                              {xpos + (tileWidth - img.width) / 2, ypos + 12, img.width, img.height}, WHITE);
+                    ImageDraw(&sheet, img, {0, 0, (float)img.width, (float)img.height},
+                              {xpos + float(tileWidth - img.width) / 2, ypos + 12, (float)img.width, (float)img.height}, WHITE);
                     UnloadImage(img);
                 }
             }
@@ -95,6 +93,10 @@ public:
         InitWindow(screenWidth, screenHeight, "Lost Colonies v" LOSTCOLONIES_VERSION_STRING_LONG);
         // ToggleFullscreen();
         InitAudioDevice();
+
+        //float scalex{0}, scaley{0};
+        //glfwGetWindowContentScale(glfwGetCurrentContext(), &scalex, &scaley);
+        //TraceLog(LOG_INFO, "scalex: %.3f, scaley: %.3f", scalex, scaley);
 
         auto* sm = SoundManager::instance();
         sm->generateSounds(
@@ -231,8 +233,8 @@ public:
                 EndTextureMode();
                 BeginDrawing();
                 DrawTexturePro(_renderTexture.texture,
-                               {0, (float)GetScreenHeight() - _currentScene->height(), (float)_currentScene->width(),
-                                (float)-_currentScene->height()},
+                               {0, (float)GetScreenHeight() - _currentScene->height(), _currentScene->width(),
+                                -_currentScene->height()},
                                {0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()}, {0.0f, 0.0f}, 0.0f, WHITE);
                 if (_inTransition) {
                     DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, _transAlpha));

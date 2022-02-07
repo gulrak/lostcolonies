@@ -4,6 +4,8 @@ project(lostcolonies VERSION 1.1 LANGUAGES C CXX)
 
 if(EMSCRIPTEN)
     set(PLATFORM "Web")
+else()
+    set(PLATFORM "Desktop")
 endif()
 
 set(WITH_FLAT_OUTPUT ON CACHE BOOL "Build with collecting output directories bin&lib")
@@ -73,7 +75,8 @@ set(GAME_SOURCES
     src/random.hpp
     src/random.cpp
     src/config.hpp
-    src/math.hpp
+    src/raygui.hpp
+    src/raymath.hpp
     src/particles.hpp
     src/hash.hpp
     src/cli.hpp

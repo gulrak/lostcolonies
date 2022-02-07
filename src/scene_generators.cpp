@@ -1,14 +1,16 @@
-
+#include "config.hpp"
 #include "scene_generators.hpp"
 
 #include <ctime>
 #include <vector>
 
 #define RAYGUI_IMPLEMENTATION
-#include <extras/raygui.h>
+#include "raygui.hpp"
 
-#define GUI_PROPERTY_LIST_IMPLEMENTATION
-#include "dm_property_list.h"
+
+DISABLE_WARNING_PUSH
+
+DISABLE_WARNING_PEDANTIC
 
 #if 0
 static std::vector<GuiDMProperty> _shipgenProperties{
@@ -81,8 +83,10 @@ static std::vector<GuiDMProperty> _bulletProperties{
     PINT_RANGE("Height", 0, 8, 1, 4, 16),
 };
 
+DISABLE_WARNING_POP
+
 GeneratorsScene::GeneratorsScene()
-: _random(std::time(nullptr))
+: _random(uint64_t(std::time(nullptr)))
 {
     GuiLoadStyleDefault();
     GuiSetStyle(LISTVIEW, LIST_ITEMS_HEIGHT, 24);
@@ -98,16 +102,16 @@ void GeneratorsScene::render()
     //renderBackground();
     static std::vector<GuiDMProperty>* generatorList[] = { &_soundProperties, &_spaceshipProperties, &_bulletProperties };
     static int toggleGroupActive = 1;
-    auto guiWidth = 220;
+    auto guiWidth = 220.0f;
     auto gridWidth = width() - guiWidth;
     //auto gridHeight = height() - 128;
     DrawRectangle(0, 0, gridWidth, height(), Scene::BasePalette[0]);
     toggleGroupActive = GuiToggleGroup({ width() - guiWidth, 0, guiWidth/3, 25 }, "#124#Sound;#152#Alien;#145#Bullet", toggleGroupActive);
     if(toggleGroupActive == 1) {
-        auto width = _spaceshipProperties[2].value.vint.val * (_spaceshipProperties[5].value.vbool ? 2 : 1);
-        auto height = _spaceshipProperties[3].value.vint.val * (_spaceshipProperties[6].value.vbool ? 2 : 1);
-        GuiGrid({0,0,width*_pixelCellSize,height*_pixelCellSize}, _pixelCellSize*4, 4);
-        DrawRectangleLines(0,0,width*_pixelCellSize, height*_pixelCellSize,{123,146,157,255});
+        auto w = _spaceshipProperties[2].value.vint.val * (_spaceshipProperties[5].value.vbool ? 2 : 1);
+        auto h = _spaceshipProperties[3].value.vint.val * (_spaceshipProperties[6].value.vbool ? 2 : 1);
+        GuiGrid({0,0,(float)(w*_pixelCellSize),(float)(h*_pixelCellSize)}, (float)_pixelCellSize*4, 4);
+        DrawRectangleLines(0,0,(float)(w*_pixelCellSize), (float)(h*_pixelCellSize),{123,146,157,255});
     }
 //    DrawLine(0, gridHeight, gridWidth, gridHeight, {123,146,157,255});
     if(GuiButton({width() - guiWidth, 25, guiWidth, 25}, "Regenerate")) {
@@ -138,7 +142,7 @@ void GeneratorsScene::render()
             break;
     }
     auto& prop = *(generatorList[toggleGroupActive]);
-    GuiDMPropertyList({width() - guiWidth, 25*2, guiWidth, height() - 25*2}, prop.data(), prop.size(), &_focus, &_scroll);
+    GuiDMPropertyList({width() - guiWidth, 25*2, guiWidth, height() - 25*2}, prop.data(), (int)prop.size(), &_focus, &_scroll);
     //if (prop[0].value.vbool >= 1)
     //{
     //    DrawText(TextFormat("FOCUS:%i | SCROLL:%i | FPS:%i", _focus, _scroll, GetFPS()), prop[8].value.v2.x, prop[8].value.v2.y, 20, prop[11].value.vcolor);

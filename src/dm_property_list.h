@@ -66,34 +66,34 @@ extern "C" {            // Prevents name mangling of functions
 // Some usefull macros for creating properties
 
 // Create a bool property with name `N`, flags `F` and value `V`
-#define PBOOL(N, F, V) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_BOOL, F, .value.vbool = V}
+#define PBOOL(N, F, V) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_BOOL, F, {.vbool = V}}
 // Create a int property with name `N`, flags `F` and value `V`
-#define PINT(N, F, V) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_INT, F, .value.vint = {V,0,0,1}}
+#define PINT(N, F, V) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_INT, F, { .vint = {V,0,0,1}}}
 // Create a ranged int property within `MIN` and `MAX` with name `N`, flags `F` value `V`. 
 // Pressing the spinner buttons will increase/decrease the value by `S`.
-#define PINT_RANGE(N, F, V, S, MIN, MAX) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_INT, F, .value.vint = {V,MIN,MAX,S}}
+#define PINT_RANGE(N, F, V, S, MIN, MAX) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_INT, F, {.vint = {V,MIN,MAX,S}}}
 // Create a float property with name `N`, flags `F` and value `V`
-#define PFLOAT(N, F, V) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_FLOAT, F, .value.vfloat = {V,0.f,0.f,1.0f,3}}
+#define PFLOAT(N, F, V) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_FLOAT, F, {.vfloat = {V,0.f,0.f,1.0f,3}}}
 // Create a ranged float property within `MIN` and `MAX` with name `N`, flags `F` value `V` with `P` decimal digits to show. 
 // Pressing the spinner buttons will increase/decrease the value by `S`.
-#define PFLOAT_RANGE(N, F, V, S, P, MIN, MAX) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_FLOAT, F, .value.vfloat = {V,MIN,MAX,S,P}}
+#define PFLOAT_RANGE(N, F, V, S, P, MIN, MAX) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_FLOAT, F, {.vfloat = {V,MIN,MAX,S,P}}}
 // Create a text property with name `N`, flags `F` value `V` and max text size `S`
-#define PTEXT(N, F, V, S) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_TEXT, F, .value.vtext = {V, S} }
+#define PTEXT(N, F, V, S) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_TEXT, F, {.vtext = {V, S}}}
 // Create a text property with name `N`, flags `F` value `V` and max text size `S`
-#define PSELECT(N, F, V, A) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_SELECT, F, .value.vselect = {V, A} }
+#define PSELECT(N, F, V, A) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_SELECT, F, {.vselect = {V, A}}}
 // Create a 2D vector property with name `N`, flags `F` and the `X`, `Y` coordinates
-#define PVEC2(N, F, X, Y) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_VECTOR2, F, .value.v2 = {X, Y} }
+#define PVEC2(N, F, X, Y) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_VECTOR2, F, {.v2 = {X, Y}}}
 // Create a 3D vector property with name `N`, flags `F` and the `X`, `Y`, `Z` coordinates
-#define PVEC3(N, F, X, Y, Z) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_VECTOR3, F, .value.v3 = {X, Y, Z} }
+#define PVEC3(N, F, X, Y, Z) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_VECTOR3, F, {.v3 = {X, Y, Z}}}
 // Create a 4D vector property with name `N`, flags `F` and the `X`, `Y`, `Z`, `W` coordinates
-#define PVEC4(N, F, X, Y, Z, W) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_VECTOR4, F, .value.v4 = {X, Y, Z, W} }
+#define PVEC4(N, F, X, Y, Z, W) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_VECTOR4, F, {.v4 = {X, Y, Z, W}}}
 // Create a rectangle property with name `N`, flags `F`, `X`, `Y` coordinates and `W` and `H` size
-#define PRECT(N, F, X, Y, W, H) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_RECT, F, .value.vrect = {X, Y, W, H} }
+#define PRECT(N, F, X, Y, W, H) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_RECT, F, {.vrect = {X, Y, W, H}}}
 // Create a 3D vector property with name `N`, flags `F` and the `R`, `G`, `B`, `A` channel values
-#define PCOLOR(N, F, R, G, B, A) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_COLOR, F, .value.vcolor = {R, G, B, A} }
+#define PCOLOR(N, F, R, G, B, A) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_COLOR, F, {.vcolor = {R, G, B, A}}}
 // Create a collapsable section named `N` with `F` flags and the next `C` properties as children.
 // !! A section cannot hold another section as a child !!
-#define PSECTION(N, F, C) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_SECTION, F, .value.vsection = (C)}
+#define PSECTION(N, F, C) RAYGUI_CLITERAL(GuiDMProperty){N, GUI_PROP_SECTION, F, {.vsection = (C)}}
 
 //----------------------------------------------------------------------------------
 // Types and Structures Definition

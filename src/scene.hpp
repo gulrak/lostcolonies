@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 
+#include "config.hpp"
 #include "sprite.hpp"
 #include "particles.hpp"
 #include "hash.hpp"
@@ -10,6 +11,7 @@
 #include <variant>
 #include <string>
 #include <tuple>
+#include <type_traits>
 #include <unordered_map>
 
 inline static const int screenWidth{900};
@@ -21,7 +23,7 @@ enum class SceneId { StartupScene, SetupScene, IngameScene, GameOverScene, Gener
 
 enum class RenderMode { Default, Unscaled, Upscale2 };
 
-using Value = std::variant<std::nullptr_t,bool,int,size_t,int64_t,float,std::string,Color,Vector2,Vector3>;
+using Value = std::variant<std::nullptr_t,bool,int64_t,float,std::string,Color,Vector2,Vector3>;
 
 class Scene
 {
@@ -63,8 +65,8 @@ public:
     virtual SceneId thisScene() const = 0;
     virtual SceneId nextScene() = 0;
 
-    int width() const { return renderMode() == RenderMode::Upscale2 ? GetScreenWidth()/2 : GetScreenWidth(); }
-    int height() const { return renderMode() == RenderMode::Upscale2 ? GetScreenHeight()/2 : GetScreenHeight(); }
+    float width() const { return float(renderMode() == RenderMode::Upscale2 ? GetScreenWidth()/2 : GetScreenWidth()); }
+    float height() const { return float(renderMode() == RenderMode::Upscale2 ? GetScreenHeight()/2 : GetScreenHeight()); }
 
     void drawTextCentered(const char *text, int y, int fontSize, Color tint);
     static void drawTextBoxed(const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint);
@@ -83,7 +85,13 @@ public:
     template<typename T>
     static void setProperty(uint64_t id, const T& value)
     {
-        _properties.insert_or_assign(id, Value{value});
+        if constexpr (std::is_integral<T>::value && !std::is_same<T, bool>::value) {
+            _properties.insert_or_assign(id, Value{int64_t(value)});
+        }
+
+        else {
+            _properties.insert_or_assign(id, Value{value});
+        }
     }
 
     static const Value& getProperty(uint64_t id)
@@ -97,13 +105,23 @@ public:
     static T getProperty(uint64_t id, const T& defaultValue)
     {
         auto iter = _properties.find(id);
-#ifndef NDEBUG
         if(iter == _properties.end()) {
+#ifndef NDEBUG
             TraceLog(LOG_ERROR, "Property '%ld' not found!", id);
-        }
 #endif
-        return iter != _properties.end() && std::holds_alternative<T>(iter->second) ? std::get<T>(iter->second) : defaultValue;
+            return defaultValue;
+        }
+        if constexpr (std::is_integral<T>::value && !std::is_same<T, bool>::value) {
+            // std::nullptr_t,bool,int64_t,float,std::string,Color,Vector2,Vector3
+            return std::visit(visitor{[defaultValue](const auto&) { return defaultValue; },
+                                      [defaultValue](std::int64_t val) { return (T)val; }}, iter->second);
+        }
+        else {
+            return std::holds_alternative<T>(iter->second) ? std::get<T>(iter->second) : defaultValue;
+        }
     }
+
+ 
 
     static Color getColor(int idx)
     {
@@ -120,3 +138,9 @@ protected:
     inline static bool _clicked{false};
     inline static int64_t _frameCount{0};
 };
+
+template<>
+inline uint64_t Scene::getProperty<uint64_t>(uint64_t id, const uint64_t& defaultValue)
+{
+    return static_cast<uint64_t>(getProperty(id, static_cast<int64_t>(defaultValue)));
+}
