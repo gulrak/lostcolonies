@@ -36,6 +36,27 @@ compiled via emscripten on a few browsers. I see no reason it would not work
 on as native game on Windows and Linux too, but I didn't test during the gamejam
 crunch time.
 
+### Compiling from Source
+
+Lost Colonies uses CMake as a build solution. To build it, checkout or download
+the source.
+
+#### Linux / macOS
+
+Open a terminal, enter the directory where the code was extracted and run:
+
+```
+cmake -S . -B build
+```
+
+to configure the project, and
+
+```
+cmake --build build
+```
+
+to compile it.
+
 ### Used Resources
 
 * [raylib](https://www.raylib.com) - the fun game programming library that inspired me to write this.
