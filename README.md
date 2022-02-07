@@ -57,6 +57,13 @@ cmake --build build
 
 to compile it.
 
+#### Build for Web
+
+```
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=<path-to-emsdk>/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+cmake --build build
+```
+
 ### Used Resources
 
 * [raylib](https://www.raylib.com) - the fun game programming library that inspired me to write this.
