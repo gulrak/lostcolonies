@@ -478,7 +478,11 @@ public:
         int right = left + (int)width()/3;
         auto dome = left + 75;
         auto surface = 1000 - _pixelOverGround + (int)height() - 32;
-        if(_pixelOverGround > 900) {
+        // Only draw if we are in close distance of the colony, currently inverted logic,
+        // so it is actually distance from battle area
+        if(_pixelOverGround > 800) {
+            // Atmosphere
+            DrawRectangleGradientV(0, surface -  150, (int)width(), 200, _sky1, _sky0);
             // Geo-Dome
             DrawCircle(dome, surface, 24, BasePalette[3]);
             DrawCircle(dome, surface, 22, BasePalette[4]);
@@ -486,7 +490,6 @@ public:
                 DrawRectangle(dome - 13 + i * 7, surface - buildings[i], 6, buildings[i], BasePalette[2]);
             }
             DrawCircle(dome, surface, 22, Fade(BasePalette[4], 0.5f));
-
             // Ground
             for (int i = 0; i < left; ++i) {
                 DrawRectangle(i, surface - _terrainHeight[1024 - left + i], 1, 100, BasePalette[17]);
@@ -496,15 +499,23 @@ public:
             }
             DrawRectangle(left, surface, right - left, 48, BasePalette[17]);
             auto tw = MeasureText(_currentPlanet.c_str(), 10);
+            // Name
             DrawText(_currentPlanet.c_str(), dome - tw / 2, surface + 7, 10, WHITE);
         }
     }
+
     void generateTerrain(const std::string& name)
     {
         _random.seed(name);
         _terrainHeight.assign(1024,0);
         generateTerrain(0, 1023, 48);
+        Random rh{42};
+        rh.seed(name);
+        auto h = (float)rh.randomInt(180, 359);
+        _sky0 = ColorAlpha(ColorFromHSV(h, 0.9f, 0.3f), 0.5f);
+        _sky1 = ColorAlpha(ColorFromHSV(h, 0.7f, 0.3f), 0.0f);
     }
+
 protected:
     void explosion(Vector2 pos, int particles = 250)
     {
@@ -513,6 +524,7 @@ protected:
             _particles.back().gradient = &_explosionColors;
         }
     }
+
     void generateTerrain(size_t left, size_t right, float disp)
     {
         if(left + 1 >= right) return;
@@ -523,11 +535,13 @@ protected:
         generateTerrain(left, between, disp);
         generateTerrain(between, right, disp);
     }
+
     void message(std::string msg, int x, int y, int time_ms)
     {
         auto w = MeasureText(msg.c_str(), 10);
         _messages.push_back({x - w/2, y, std::move(msg), _frameCount + int((float)time_ms/16.6667f), {255,255,255,128}});
     }
+
     State _state{State::Init};
     SceneId _finishScreen = SceneId::IngameScene;
     Random _random{1234};
@@ -540,6 +554,8 @@ protected:
     std::vector<Projectile> _projectiles;
     std::vector<Particle2> _particles;
     std::vector<int> _terrainHeight{1024};
+    Color _sky0{};
+    Color _sky1{};
     std::vector<int> _buildings{4};
     struct Message {
         int x{0};
